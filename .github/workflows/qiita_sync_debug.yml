@@ -1,17 +1,11 @@
-name: Qiita Sync Check
+name: Qiita Sync Debug
 
 on:
-  schedule:
-    - cron: "29 17 * * *"
-  workflow_run:
-    workflows: ["Qiita Sync"]
-    types:
-      - completed
   workflow_dispatch:
 
 jobs:
   qiita_sync_check:
-    name: qiita-sync check
+    name: qiita-sync check debug
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,10 +17,8 @@ jobs:
       - name: Install qiita-sync
         run: |
           python -m pip install -i https://test.pypi.org/simple/ qiita-sync
-      - name: Run qiita-sync check
+      - name: Run qiita-sync check debug
         run: |
-          qiita_sync check . > ./qiita_sync_output.txt
-          cat ./qiita_sync_output.txt
-          [ ! -s "qiita_sync_output.txt" ] || exit 1
+          qiita_sync check --verbose .
         env: 
           QIITA_ACCESS_TOKEN: ${{ secrets.QIITA_ACCESS_TOKEN }}
